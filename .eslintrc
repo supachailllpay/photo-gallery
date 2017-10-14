@@ -1,0 +1,13 @@
+{
+  "extends": "standard",
+  "plugins": ["html"],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "Polymer": true
+  },
+  "rules": {
+    "no-multiple-empty-lines": ["off"]
+  }
+}

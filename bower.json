@@ -1,0 +1,11 @@
+{
+  "name": "photo-gallery",
+  "description": "A photo gallery element based on Polymer",
+  "main": "photo-gallery.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.1.1"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0"
+  }
+}
