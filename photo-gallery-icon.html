@@ -37,7 +37,13 @@
 
   </template>
   <script>
-
+  /**
+   * `photo-gallery-icon`
+   * icons used for `<photo-gallery>`
+   *
+   * @customElement
+   * @polymer
+   */
     class PhotoGalleryIcon extends Polymer.Element {
       static get is () {
         return 'photo-gallery-icon'
@@ -45,6 +51,9 @@
 
       static get properties () {
         return {
+          /**
+           * specifier of the used icon
+           */
           icon: {
             type: String
           }
