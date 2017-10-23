@@ -7,12 +7,42 @@
 
     <title>photo-gallery demo</title>
 
+    <script src='../../webcomponentsjs/webcomponents-lite.js'></script>
+
     <link rel='import' href='../../iron-demo-helpers/demo-snippet.html'>
     <link rel='import' href='../../iron-demo-helpers/demo-pages-shared-styles.html'>
     <link rel='import' href='../photo-gallery.html'>
 
     <custom-style>
-      <style include='demo-pages-shared-styles'></style>
+      <style include='demo-pages-shared-styles'>
+        body {
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .toolbar {
+          display: flex;
+          padding: 0 12px;
+        }
+
+        .toolbar-icon {
+          padding: 20px 12px;
+          cursor: pointer;
+        }
+
+        .toolbar-blank {
+          flex-grow: 1;
+        }
+
+        .item {
+          flex-grow: 1;
+          margin: 4px;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          cursor: pointer;
+        }
+      </style>
     </custom-style>
 
   </head>
@@ -22,7 +52,73 @@
       <h3>Basic photo-gallery demo</h3>
       <demo-snippet>
         <template>
-          <photo-gallery></photo-gallery>
+          <photo-gallery height='120'>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500487003906-9baadc8d610d?auto=compress,format&fit=crop&w=334&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1483653085484-eb63c9f02547?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1499958919714-e10d2741a387?auto=compress,format&fit=crop&w=334&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1503263892381-7f7fd5e5ec15?auto=compress,format&fit=crop&w=376&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1429554429301-1c7d5ae2d42e?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1501422955948-a75c84b11ecf?auto=compress,format&fit=crop&w=752&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1455796653466-32048b2b780e?auto=compress,format&fit=crop&w=749&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1463414689943-2aca18b2242b?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1428976365951-b70e0fa5c551?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500284306430-8f3cad668bb2?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1506047037994-ddbed74bb1e5?auto=compress,format&fit=crop&w=323&h=&q=80'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1476838605201-a71ef70b6bff?auto=compress,format&fit=crop&w=750&h=&q=80'></div>
+          </photo-gallery>
+        </template>
+      </demo-snippet>
+
+      <h3>Use with `aspect-ratio` query string</h3>
+      <demo-snippet>
+        <template>
+          <photo-gallery height='120'>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500487003906-9baadc8d610d?auto=compress,format&fit=crop&w=334&h=&q=80&aspect-ratio=0.67'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1483653085484-eb63c9f02547?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1499958919714-e10d2741a387?auto=compress,format&fit=crop&w=334&h=&q=80&aspect-ratio=0.67'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1503263892381-7f7fd5e5ec15?auto=compress,format&fit=crop&w=376&h=&q=80&aspect-ratio=0.75'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1429554429301-1c7d5ae2d42e?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1501422955948-a75c84b11ecf?auto=compress,format&fit=crop&w=752&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1455796653466-32048b2b780e?auto=compress,format&fit=crop&w=749&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1463414689943-2aca18b2242b?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.78'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1428976365951-b70e0fa5c551?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500284306430-8f3cad668bb2?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1506047037994-ddbed74bb1e5?auto=compress,format&fit=crop&w=323&h=&q=80&aspect-ratio=0.65'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1476838605201-a71ef70b6bff?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.63'></div>
+          </photo-gallery>
+        </template>
+      </demo-snippet>
+
+      <h3>Use with custom toolbar</h3>
+      <demo-snippet>
+        <template>
+          <photo-gallery height='120' id='photoGallery'>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500487003906-9baadc8d610d?auto=compress,format&fit=crop&w=334&h=&q=80&aspect-ratio=0.67'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1483653085484-eb63c9f02547?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1499958919714-e10d2741a387?auto=compress,format&fit=crop&w=334&h=&q=80&aspect-ratio=0.67'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1503263892381-7f7fd5e5ec15?auto=compress,format&fit=crop&w=376&h=&q=80&aspect-ratio=0.75'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1429554429301-1c7d5ae2d42e?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1501422955948-a75c84b11ecf?auto=compress,format&fit=crop&w=752&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1455796653466-32048b2b780e?auto=compress,format&fit=crop&w=749&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1463414689943-2aca18b2242b?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.78'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1428976365951-b70e0fa5c551?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1500284306430-8f3cad668bb2?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.50'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1506047037994-ddbed74bb1e5?auto=compress,format&fit=crop&w=323&h=&q=80&aspect-ratio=0.65'></div>
+            <div class='item' data-url='https://images.unsplash.com/photo-1476838605201-a71ef70b6bff?auto=compress,format&fit=crop&w=750&h=&q=80&aspect-ratio=1.63'></div>
+
+            <div class='toolbar' slot='toolbar'>
+              <svg class='toolbar-icon' width='24' height='24' viewBox='0 0 24 24' fill='white' id='closeButton'><path d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/><path d='M0 0h24v24H0z' fill='none'/></svg>
+              <div class='toolbar-blank'></div>
+              <svg class='toolbar-icon' width='24' height='24' viewBox='0 0 24 24' fill='white'><path d='M0 0h24v24H0z' fill='none'/><path d='M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z'/></svg>
+              <svg class='toolbar-icon' width='24' height='24' viewBox='0 0 24 24' fill='white'><path d='M0 0h24v24H0z' fill='none'/><path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z'/></svg>
+            </div>
+          </photo-gallery>
+
+          <script>
+            window.closeButton.addEventListener('click', () => {
+              window.photoGallery.close()
+            })
+          </script>
         </template>
       </demo-snippet>
     </div>
