@@ -1,4 +1,8 @@
 <link rel='import' href='../polymer/polymer-element.html'>
+<link rel='import' href='../shadycss/apply-shim.html'>
+
+<link rel='import' href='anime.html'>
+<link rel='import' href='photo-gallery-icon.html'>
 
 <dom-module id='photo-gallery'>
   <template>
@@ -7,9 +11,109 @@
       :host {
         display: block;
       }
+
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -4px;
+      }
+
+      ::slotted(.item) {
+        flex-grow: 1;
+        margin: 4px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        cursor: pointer;
+      }
+
+      .slideshow {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2400;
+        display: none;
+        background-color: black;
+        user-select: none;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+      }
+
+      .chevron {
+        position: absolute;
+        top: 50%;
+        margin-top: -18px;
+        transition: opacity 0.25s ease-in-out;
+        opacity: 0.2;
+        --photo-gallery-icon: {
+          width: 36px;
+          height: 36px;
+        };
+      }
+
+      .chevron:hover {
+        opacity: 1;
+      }
+
+      .chevron:first-of-type {
+        left: 24px;
+      }
+
+      .chevron:last-of-type {
+        right: 24px;
+      }
+
+      .toolbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 2400;
+        height: 64px;
+        background-image: linear-gradient(black, transparent);
+        transform: translateY(-100%);
+        transition: transform 0.25s ease-in-out 0.05s;
+        visibility: hidden;
+        will-change: transform;
+      }
+
+      .toolbar[visible] {
+        transform: translateY(0);
+        visibility: visible;
+      }
+
+      .back {
+        padding: 20px 24px;
+      }
     </style>
 
-    <h1>Hello photo-gallery!</h1>
+    <div class='grid' on-click='open'>
+      <slot id='grid'></slot>
+    </div>
+
+    <div class='slideshow' id='slideshow'>
+      <img class='slide' id='slide'>
+      <img class='slide' style='display: none' id='exitSlide'>
+      <photo-gallery-icon class='chevron' icon='chevron-left' on-click='previous'></photo-gallery-icon>
+      <photo-gallery-icon class='chevron' icon='chevron-right' on-click='next'></photo-gallery-icon>
+    </div>
+
+    <div class='toolbar' visible$='[[isFullScreen]]'>
+      <slot name='toolbar'>
+        <photo-gallery-icon class='back' icon='arrow-back' on-click='close'></photo-gallery-icon>
+      </slot>
+    </div>
 
   </template>
   <script>
@@ -26,6 +130,146 @@
     class PhotoGallery extends Polymer.Element {
       static get is () {
         return 'photo-gallery'
+      }
+
+      static get properties () {
+        return {
+          height: {
+            type: Number,
+            value: 240
+          },
+          selected: {
+            type: Number,
+            value: -1,
+            notify: true
+          }
+        }
+      }
+
+      anime (properties) {
+        let timing = { duration: 250, easing: 'easeInOutQuad' }
+        window.anime(Object.assign(timing, properties))
+      }
+
+      closest (element, className) {
+        while (element) {
+          if (element.classList.contains(className)) return element
+          element = element.parentElement
+        }
+      }
+
+      getAspectRatio (url) {
+        let match = url.match(/aspect-ratio=([.\d]+)/)
+        return match ? parseFloat(match[1]) : 1
+      }
+
+      updateItemsStyle () {
+        this.items.forEach(item => {
+          let url = item.dataset.url
+          let aspectRatio = this.getAspectRatio(url)
+          item.style.width = this.height * aspectRatio + 'px'
+          item.style.height = this.height + 'px'
+          item.style.backgroundImage = `url(${url})`
+        })
+      }
+
+      updateItems () {
+        this.items = this.$.grid.assignedNodes()
+          .filter(node => node.nodeType === Node.ELEMENT_NODE)
+          .filter(node => node.classList.contains('item'))
+        this.updateItemsStyle()
+      }
+
+      toggleScrollBar (enabled) {
+        let html = document.documentElement
+        let body = document.body
+        if (!enabled) {
+          let top = -html.scrollTop + 'px'
+          body.style.position = 'fixed'
+          body.style.top = top
+        } else {
+          let top = -parseInt(body.style.top, 10)
+          body.style.position = ''
+          body.style.top = ''
+          html.scrollTop = top
+        }
+      }
+
+      open (event) {
+        let item = this.closest(event.target, 'item')
+        if (!item) return
+
+        let slide = this.$.slide
+        let slideshow = this.$.slideshow
+        let rect = item.getBoundingClientRect()
+        slide.src = item.dataset.url
+        slideshow.style.display = 'block'
+        this.anime({
+          targets: slideshow,
+          top: [rect.top, 0],
+          left: [rect.left, 0],
+          bottom: [window.innerHeight - rect.top - rect.height, 0],
+          right: [window.innerWidth - rect.left - rect.width, 0]
+        })
+        this.selected = this.items.indexOf(item)
+        this.isFullScreen = true
+        this.toggleScrollBar(false)
+      }
+
+      close () {
+        let slide = this.$.slide
+        let slideshow = this.$.slideshow
+        this.anime({
+          targets: slideshow,
+          opacity: [1, 0],
+          complete () {
+            slide.src = ''
+            slideshow.removeAttribute('style')
+          }
+        })
+        this.selected = -1
+        this.isFullScreen = false
+        this.toggleScrollBar(true)
+      }
+
+      change (direction) {
+        let nextItem = this.items[this.selected + direction]
+        if (!nextItem) return
+
+        let slide = this.$.slide
+        let exitSlide = this.$.exitSlide
+        exitSlide.src = slide.src
+        slide.src = nextItem.dataset.url
+        this.anime({
+          targets: slide,
+          opacity: [0, 1]
+        })
+        exitSlide.style.display = 'block'
+        this.anime({
+          targets: exitSlide,
+          opacity: [1, 0],
+          translateX: ['0', `${-direction}0%`],
+          complete () {
+            exitSlide.style.display = 'none'
+          }
+        })
+        this.selected += direction
+      }
+
+      previous () {
+        this.change(-1)
+      }
+
+      next () {
+        this.change(1)
+      }
+
+      ready () {
+        super.ready()
+
+        let grid = this.$.grid
+        this.updateItems()
+        grid.addEventListener('slotchange', this.updateItems.bind(this))
       }
     }
 
