@@ -10,6 +10,7 @@
     <style>
       :host {
         display: block;
+        height: 100vh;
       }
 
       .grid {
@@ -34,20 +35,30 @@
         bottom: 0;
         left: 0;
         z-index: 2400;
+
         display: none;
-        background-color: black;
-        user-select: none;
+
+        /* background-color: rgba(0, 0, 0, 0.816); */
+        background-color: rgba(60, 60, 60, 0.9);
+        
+        -webkit-user-select: none; /* Chrome, Opera, Safari */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none; /* Standard syntax */        
       }
 
       .slide {
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
         max-width: 100%;
         max-height: 100%;
         margin: auto;
+
+        display: block;
+
       }
 
       .chevron {
@@ -55,11 +66,13 @@
         top: 50%;
         margin-top: -18px;
         transition: opacity 0.25s ease-in-out;
+        background-color: rgba(255, 255, 255, 0.445);
+
         opacity: 0.2;
         --photo-gallery-icon: {
           width: 36px;
           height: 36px;
-        };
+        }
       }
 
       .chevron:hover {
@@ -75,26 +88,53 @@
       }
 
       .toolbar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 2400;
+        position: absolute;
+        /* position: fixed; */
+        width: 100%;
+        height: 100vh;
+        height: 0px;
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        z-index: 10001;
         height: 64px;
-        background-image: linear-gradient(black, transparent);
+        background: linear-gradient(black, transparent);
+        /* background-image: linear-gradient(black, transparent); */
+
+        /* -ms-transform: translateY(-100%);
+        -webkit-transform: translateY(-100%);
         transform: translateY(-100%);
-        transition: transform 0.25s ease-in-out 0.05s;
-        visibility: hidden;
-        will-change: transform;
+        
+
+        -ms-transition: transform 0.25s ease-in-out 0.05s;
+        -webkit-transition: transform 0.25s ease-in-out 0.05s;
+        transition: transform 0.25s ease-in-out 0.05s; */
+
+        /* visibility: hidden; */
+        display: block;
+        /* will-change: transform; */
       }
 
       .toolbar[visible] {
-        transform: translateY(0);
-        visibility: visible;
+
+        /* background: green; */
+        /* z-index: 10001; */
+        /* -ms-transform: rotate(0); /* IE 9 */
+        /* -webkit-transform: rotate(0); /* Chrome, Safari, Opera */        
+        /* transform: translateY(0);  */ 
+
+        /* visibility: visible; */
+        /* display: block; */
+        top: 10px;
+        left: 10px;
       }
 
       .back {
-        padding: 20px 24px;
+        background-color: rgba(255, 255, 255, 0.213);
+        position: relative;
+        left: 10px;
+        top: 10px;
+        padding: 10px 10px;
       }
     </style>
 
@@ -103,17 +143,24 @@
     </div>
 
     <div class='slideshow' id='slideshow'>
+      <!-- <div class='toolbar' visible$='[[isFullScreen]]' > -->
+       <!-- <div id="toolbar" class='toolbar' >
+              <slot name='toolbar'>
+          <button on-click="close">BACK</button>
+          <photo-gallery-icon class='back' icon='arrow-back' on-click='close'></photo-gallery-icon>
+        </slot>
+      </div> -->
+
+      <!-- <button on-click="close">BACK</button> -->
+      <photo-gallery-icon class='back' icon='arrow-back' on-click='close'></photo-gallery-icon>
+
+
       <img class='slide' id='slide'>
       <img class='slide' style='display: none' id='exitSlide'>
       <photo-gallery-icon class='chevron' icon='chevron-left' on-click='previous'></photo-gallery-icon>
       <photo-gallery-icon class='chevron' icon='chevron-right' on-click='next'></photo-gallery-icon>
     </div>
 
-    <div class='toolbar' visible$='[[isFullScreen]]'>
-      <slot name='toolbar'>
-        <photo-gallery-icon class='back' icon='arrow-back' on-click='close'></photo-gallery-icon>
-      </slot>
-    </div>
 
   </template>
   <script>
@@ -140,6 +187,9 @@
             type: Number,
             value: -1,
             notify: true
+          },
+          isFullScreen: {
+
           }
         }
       }
@@ -194,14 +244,17 @@
       }
 
       open (event) {
+
         let item = this.closest(event.target, 'item')
         if (!item) return
 
         let slide = this.$.slide
-        let slideshow = this.$.slideshow
         let rect = item.getBoundingClientRect()
         slide.src = item.dataset.url
-        slideshow.style.display = 'block'
+        this.$.slideshow.style.display = 'block';
+        // this.$.toolbar.style.display = 'block';
+        // this.$.slideshow.style.visibility = 'visible';
+
         this.anime({
           targets: slideshow,
           top: [rect.top, 0],
@@ -209,6 +262,7 @@
           bottom: [window.innerHeight - rect.top - rect.height, 0],
           right: [window.innerWidth - rect.left - rect.width, 0]
         })
+
         this.selected = this.items.indexOf(item)
         this.isFullScreen = true
         this.toggleScrollBar(false)
