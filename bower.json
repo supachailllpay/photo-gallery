@@ -4,7 +4,8 @@
   "main": "photo-gallery.html",
   "dependencies": {
     "polymer": "^2.0.0",
-    "animejs": "^2.2.0"
+    "animejs": "^2.2.0",
+    "iron-a11y-keys": "PolymerElements/iron-a11y-keys#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
