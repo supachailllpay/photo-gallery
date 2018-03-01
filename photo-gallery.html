@@ -1,6 +1,6 @@
 <link rel='import' href='../polymer/polymer-element.html'>
 <link rel='import' href='../shadycss/apply-shim.html'>
-<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
+<link rel='import' href='../iron-a11y-keys/iron-a11y-keys.html'>
 
 <link rel='import' href='anime.html'>
 <link rel='import' href='photo-gallery-icon.html'>
@@ -99,14 +99,15 @@
       }
     </style>
 
-    <iron-a11y-keys target="[[keyEventTarget]]" keys="left up" on-keys-pressed="previous"></iron-a11y-keys>
-    <iron-a11y-keys target="[[keyEventTarget]]" keys="right down" on-keys-pressed="next"></iron-a11y-keys>
+    <iron-a11y-keys target='[[$.slideshow]]' keys='esc' on-keys-pressed='close'></iron-a11y-keys>
+    <iron-a11y-keys target='[[$.slideshow]]' keys='left up' on-keys-pressed='previous'></iron-a11y-keys>
+    <iron-a11y-keys target='[[$.slideshow]]' keys='right down' on-keys-pressed='next'></iron-a11y-keys>
 
     <div class='grid' on-click='open'>
       <slot id='grid'></slot>
     </div>
 
-    <div class='slideshow' id='slideshow'>
+    <div class='slideshow' tabindex='-1' id='slideshow'>
       <img class='slide' id='slide'>
       <img class='slide' style='display: none' id='exitSlide'>
       <photo-gallery-icon class='chevron' icon='chevron-left' on-click='previous'></photo-gallery-icon>
@@ -144,9 +145,6 @@
             type: Number,
             value: -1,
             notify: true
-          },
-          keyEventTarget: {
-            type: Object
           }
         }
       }
@@ -209,6 +207,7 @@
         let rect = item.getBoundingClientRect()
         slide.src = item.dataset.url
         slideshow.style.display = 'block'
+        slideshow.focus()
         this.anime({
           targets: slideshow,
           top: [rect.top, 0],
@@ -271,7 +270,6 @@
 
       ready () {
         super.ready()
-        this.keyEventTarget = document.body
 
         let grid = this.$.grid
         this.updateItems()
